@@ -22,16 +22,19 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, Category = "Component")
-		USpringArmComponent* SpringArmComponent;
+	USpringArmComponent* SpringArmComponent;
 
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, Category = "Component")
-		UCameraComponent* CameraComponent;
+	UCameraComponent* CameraComponent;
 
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, Category = "Component")
-		USTUHealthComponent* HealthComponent;
+	USTUHealthComponent* HealthComponent;
 
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, Category = "Component")
-		UTextRenderComponent* HealthTextComponent;
+	UTextRenderComponent* HealthTextComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* DeathAnimMontage;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -59,5 +62,7 @@ private:
 	void RunStart();
 	void RunStop();
 
+	void OnDeath();
+	void OnHealthChanged(float Health);
 };
 
