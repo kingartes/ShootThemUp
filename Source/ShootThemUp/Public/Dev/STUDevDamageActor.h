@@ -15,6 +15,21 @@ public:
 	// Sets default values for this actor's properties
 	ASTUDevDamageActor();
 
+	UPROPERTY(VisibleAnywhere, BluePrintReadWrite)
+	USceneComponent* SceneComponent;
+
+	UPROPERTY(EditANywhere, BluePrintReadWrite)
+	float Radius = 300.f;
+
+	UPROPERTY(EditANywhere, BluePrintReadWrite)
+	FColor SphereColor = FColor::Red;
+
+	UPROPERTY(EditANywhere, BluePrintReadWrite)
+	float Damage = 10.f;
+
+	UPROPERTY(EditANywhere, BluePrintReadWrite)
+	bool DoFullDamage = false;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
