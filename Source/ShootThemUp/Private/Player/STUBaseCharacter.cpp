@@ -8,6 +8,7 @@
 #include "Components/STUCharacterMovementComponent.h"
 #include "Components/STUHealthComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "GameFramework/Controller.h"
 
 DEFINE_LOG_CATEGORY_STATIC(BaseCharacterLog, All, All)
 
@@ -45,6 +46,7 @@ void ASTUBaseCharacter::BeginPlay()
 	HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
 		
+	LandedDelegate.AddDynamic(this, &ASTUBaseCharacter::OnGroundLanded);
 }
 
 // Called every frame
@@ -56,6 +58,18 @@ void ASTUBaseCharacter::Tick(float DeltaTime)
 void ASTUBaseCharacter::OnHealthChanged(float Health)
 {
 	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+}
+
+void ASTUBaseCharacter::OnGroundLanded(const FHitResult& hit)
+{
+	const auto FallVelocityZ = -GetCharacterMovement()->Velocity.Z;
+	UE_LOG(BaseCharacterLog, Display, TEXT("On Landed: %f"), FallVelocityZ);
+
+	if (FallVelocityZ < LandedDamageVelocity.X) return;
+
+	const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
+	UE_LOG(BaseCharacterLog, Display, TEXT("FinalDamage: %f"), FinalDamage);
+	TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
 }
 
 // Called to bind functionality to input
@@ -97,8 +111,7 @@ void ASTUBaseCharacter::RunStop()
 
 bool ASTUBaseCharacter::IsRunning() const
 {
-	UE_LOG(LogTemp, Error, TEXT("IsGoingToRun %d, IsMovingForward %d, Velocity %d"), IsGoingToRun, IsMovingForward, !GetVelocity().IsZero())
-		return IsGoingToRun && IsMovingForward && !GetVelocity().IsZero();
+	return IsGoingToRun && IsMovingForward && !GetVelocity().IsZero();
 }
 
 float ASTUBaseCharacter::GetMovementDirection() const
@@ -115,8 +128,11 @@ void ASTUBaseCharacter::OnDeath() {
 	UE_LOG(BaseCharacterLog, Display, TEXT("Player %s is dead"), *GetName());
 
 	PlayAnimMontage(DeathAnimMontage);
-
 	GetCharacterMovement()->DisableMovement();
-
 	SetLifeSpan(5.0f);
+
+	if (Controller)
+	{
+		Controller->ChangeState(NAME_Spectating);
+	}
 }
