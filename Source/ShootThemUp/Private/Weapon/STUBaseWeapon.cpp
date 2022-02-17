@@ -7,6 +7,7 @@
 #include "DrawDebugHelpers.h"
 #include "GameFrameWork/Character.h"
 #include "GameFrameWork/Controller.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, All, All)
 
@@ -43,11 +44,12 @@ void ASTUBaseWeapon::MakeShot()
 
 	if (HitResult.bBlockingHit)
 	{
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.0f, 0, 3.0f);
+		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 0.3f, 0, 3.0f);
 		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f);
+		UGameplayStatics::ApplyPointDamage(HitResult.GetActor(), 10, GetMuzzleWorldLocation(), HitResult, GetPlayerController(), this, nullptr);
 	}
 	else {
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Red, false, 3.0f, 0, 3.0f);
+		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Red, false, 0.3f, 0, 3.0f);
 	}
 }
 

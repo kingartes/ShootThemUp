@@ -9,6 +9,7 @@
 #include "Components/STUHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/STUWeaponComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Controller.h"
 
 DEFINE_LOG_CATEGORY_STATIC(BaseCharacterLog, All, All)
@@ -143,5 +144,6 @@ void ASTUBaseCharacter::OnDeath() {
 	{
 		Controller->ChangeState(NAME_Spectating);
 	}
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 }
 
