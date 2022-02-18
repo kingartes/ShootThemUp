@@ -21,6 +21,9 @@ public:
 	UFUNCTION(BluePrintCallable)
 	bool IsDead() const { return FMath::IsNearlyZero(Health); }
 
+	UFUNCTION(BluePrintCallable)
+	float GetHealthPercent() const { return Health / MaxHealth; }
+
 	FOnDeath OnDeath;
 	FOnHealthChanged OnHealthChanged;
 

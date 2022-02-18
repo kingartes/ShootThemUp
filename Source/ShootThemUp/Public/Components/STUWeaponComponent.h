@@ -22,6 +22,9 @@ public:
 	void NextWeapon();
 	void Reload();
 
+	bool GetWeaponUIData(FWeaponUIData& UIData) const;
+	FString GetAmmoStatus() const;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	TArray<FWeaponData> WeaponData;

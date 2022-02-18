@@ -135,4 +135,9 @@ void ASTUBaseWeapon::LogAmmo()
 	UE_LOG(LogBaseWeapon, Display, TEXT("%s"), *AmmoInfo)
 }
 
-
+FString ASTUBaseWeapon::GetAmmoStatus() const
+{
+	const auto BulletCount = FString::FromInt(CurrentAmmo.Bullets);
+	const auto ClipsCount = CurrentAmmo.Infinite ? "inf" : FString::FromInt(CurrentAmmo.Clips);
+	return FString(BulletCount + "/" + ClipsCount);
+}
